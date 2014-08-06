@@ -2352,7 +2352,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
             containerFrame.origin.x -= offset;
         }
         
-        backgroundView.arrowOffset = offset;
+        backgroundView.arrowOffset = -45;
         offset = backgroundView.frame.size.height / 2 + viewFrame.size.height / 2 - backgroundView.outerShadowInsets.top;
         
         containerFrame.origin.y += offset;
