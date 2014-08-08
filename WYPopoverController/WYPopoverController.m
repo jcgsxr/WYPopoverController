@@ -45,6 +45,12 @@
 
 #define WY_IS_IOS_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
+// JC: Offsets for the view.
+static CGFloat kDropDistance = 15;
+static CGFloat kArrowOffset = -40;
+// Moves the y position of the view. Higher values moves the view upwards.
+static CGFloat kTopOffset = 7;
+static CGFloat kArrowRadius = 8;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1261,40 +1267,38 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
 //                       M_PI,
 //                       M_PI_4,
 //                       NO);
-            
-            float radius = 5;
-            
+
             CGPathAddArcToPoint(outerPathRef,
                                 NULL,
                                 origin.x,
                                 origin.y,
-                                origin.x + radius,
+                                origin.x + kArrowRadius,
                                 origin.y,
-                                radius);
+                                kArrowRadius);
 
             CGPathAddArcToPoint(outerPathRef,
                                 NULL,
-                                origin.x + radius,
+                                origin.x + kArrowRadius,
                                 origin.y,
                                 CGRectGetMidX(outerRect) + arrowOffset,
                                 CGRectGetMinY(outerRect) - arrowHeight,
-                                3);
+                                kArrowRadius / 2);
             
             CGPathAddArcToPoint(outerPathRef,
                                 NULL,
                                 CGRectGetMidX(outerRect) + arrowOffset,
                                 CGRectGetMinY(outerRect) - arrowHeight,
-                                (CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2) - radius,
+                                (CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2) - kArrowRadius,
                                 CGRectGetMinY(outerRect),
-                                3);
+                                kArrowRadius / 2);
             
             CGPathAddArcToPoint(outerPathRef,
                                 NULL,
-                                (CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2) - radius,
+                                (CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2) - kArrowRadius,
                                 CGRectGetMinY(outerRect),
                                 CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2,
                                 CGRectGetMinY(outerRect),
-                                radius);
+                                kArrowRadius);
             
             CGPathAddArcToPoint(outerPathRef,
                                 NULL,
@@ -1302,7 +1306,7 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
                                 CGRectGetMinY(outerRect),
                                 CGRectGetMaxX(outerRect),
                                 CGRectGetMinY(outerRect),
-                                radius);
+                                kArrowRadius);
             
             CGPathAddArcToPoint(outerPathRef, NULL, CGRectGetMaxX(outerRect), CGRectGetMinY(outerRect), CGRectGetMaxX(outerRect), CGRectGetMaxY(outerRect), (arrowOffset >= 0) ? reducedOuterCornerRadius : outerCornerRadius);
             CGPathAddArcToPoint(outerPathRef, NULL, CGRectGetMaxX(outerRect), CGRectGetMaxY(outerRect), CGRectGetMinX(outerRect), CGRectGetMaxY(outerRect), outerCornerRadius);
@@ -2065,7 +2069,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
         
         if ((options & WYPopoverAnimationOptionMoveDown) == WYPopoverAnimationOptionMoveDown)
         {
-            beginFrame.origin.x += 15;
+            beginFrame.origin.x += kDropDistance;
             backgroundView.frame = beginFrame;
         }
         
@@ -2414,7 +2418,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
         }
         
         // JC: Move the arrow to the left.
-        backgroundView.arrowOffset = -45;
+        backgroundView.arrowOffset = kArrowOffset;
         offset = backgroundView.frame.size.height / 2 + viewFrame.size.height / 2 - backgroundView.outerShadowInsets.top;
         
         containerFrame.origin.y += offset;
@@ -2590,7 +2594,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
     containerFrame.origin = WYPointRelativeToOrientation(containerOrigin, containerFrame.size, orientation);
     
     // JC: Makes the popover move up when in landscape mode.
-    containerFrame.origin.x += 10;
+    containerFrame.origin.x += kTopOffset;
 
     if (aAnimated == YES) {
         backgroundView.frame = savedContainerFrame;
@@ -2747,7 +2751,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
                 if ((options & WYPopoverAnimationOptionMoveDown) == WYPopoverAnimationOptionMoveDown)
                 {
                     CGRect endFrame = backgroundView.frame;
-                    endFrame.origin.x += 15;
+                    endFrame.origin.x += kDropDistance;
                     backgroundView.frame = endFrame;
                 }
                 
