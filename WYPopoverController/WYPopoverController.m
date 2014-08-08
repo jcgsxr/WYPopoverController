@@ -2060,6 +2060,15 @@ static WYPopoverTheme *defaultTheme_ = nil;
             backgroundView.transform = startTransform;
         }
         
+        CGRect beginFrame = backgroundView.frame;
+        CGRect endFrame = backgroundView.frame;
+        
+        if ((options & WYPopoverAnimationOptionMoveDown) == WYPopoverAnimationOptionMoveDown)
+        {
+            beginFrame.origin.x += 15;
+            backgroundView.frame = beginFrame;
+        }
+        
         [UIView animateWithDuration:animationDuration animations:^{
             __typeof__(self) strongSelf = weakSelf;
             
@@ -2068,6 +2077,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
                 strongSelf->overlayView.alpha = 1;
                 strongSelf->backgroundView.alpha = 1;
                 strongSelf->backgroundView.transform = endTransform;
+                strongSelf->backgroundView.frame = endFrame;
             }
             adjustTintDimmed();
         } completion:^(BOOL finished) {
@@ -2733,6 +2743,14 @@ static WYPopoverTheme *defaultTheme_ = nil;
                     CGAffineTransform endTransform = [self transformForArrowDirection:strongSelf->backgroundView.arrowDirection];
                     strongSelf->backgroundView.transform = endTransform;
                 }
+                
+                if ((options & WYPopoverAnimationOptionMoveDown) == WYPopoverAnimationOptionMoveDown)
+                {
+                    CGRect endFrame = backgroundView.frame;
+                    endFrame.origin.x += 15;
+                    backgroundView.frame = endFrame;
+                }
+                
                 strongSelf->overlayView.alpha = 0;
             }
             adjustTintAutomatic();
