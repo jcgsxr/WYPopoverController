@@ -32,7 +32,7 @@
 #endif
 
 #ifdef DEBUG
-#define WY_LOG(fmt, ...)		NSLog((@"%s (%d) : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define WY_LOG(fmt, ...)        NSLog((@"%s (%d) : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define WY_LOG(...)
 #endif
@@ -852,17 +852,17 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
 
 - (BOOL)isPassthroughView:(UIView *)view
 {
-	if (view == nil)
+    if (view == nil)
     {
-		return NO;
-	}
-	
-	if ([self.passthroughViews containsObject:view])
+        return NO;
+    }
+    
+    if ([self.passthroughViews containsObject:view])
     {
-		return YES;
-	}
-	
-	return [self isPassthroughView:view.superview];
+        return YES;
+    }
+    
+    return [self isPassthroughView:view.superview];
 }
 
 #pragma mark - UIAccessibility
@@ -1250,8 +1250,59 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
             
             CGPathMoveToPoint(outerPathRef, NULL, origin.x, origin.y);
             
-            CGPathAddLineToPoint(outerPathRef, NULL, CGRectGetMidX(outerRect) + arrowOffset, CGRectGetMinY(outerRect) - arrowHeight);
-            CGPathAddLineToPoint(outerPathRef, NULL, CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2, CGRectGetMinY(outerRect));
+//            CGPathAddLineToPoint(outerPathRef, NULL, CGRectGetMidX(outerRect) + arrowOffset, CGRectGetMinY(outerRect) - arrowHeight);
+//            CGPathAddLineToPoint(outerPathRef, NULL, CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2, CGRectGetMinY(outerRect));
+            
+//          CGPathAddArc(outerPathRef,
+//                       NULL,
+//                       origin.x,
+//                       origin.y,
+//                       5,
+//                       M_PI,
+//                       M_PI_4,
+//                       NO);
+            
+            float radius = 5;
+            
+            CGPathAddArcToPoint(outerPathRef,
+                                NULL,
+                                origin.x,
+                                origin.y,
+                                origin.x + radius,
+                                origin.y,
+                                radius);
+
+            CGPathAddArcToPoint(outerPathRef,
+                                NULL,
+                                origin.x + radius,
+                                origin.y,
+                                CGRectGetMidX(outerRect) + arrowOffset,
+                                CGRectGetMinY(outerRect) - arrowHeight,
+                                3);
+            
+            CGPathAddArcToPoint(outerPathRef,
+                                NULL,
+                                CGRectGetMidX(outerRect) + arrowOffset,
+                                CGRectGetMinY(outerRect) - arrowHeight,
+                                (CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2) - radius,
+                                CGRectGetMinY(outerRect),
+                                3);
+            
+            CGPathAddArcToPoint(outerPathRef,
+                                NULL,
+                                (CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2) - radius,
+                                CGRectGetMinY(outerRect),
+                                CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2,
+                                CGRectGetMinY(outerRect),
+                                radius);
+            
+            CGPathAddArcToPoint(outerPathRef,
+                                NULL,
+                                CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2,
+                                CGRectGetMinY(outerRect),
+                                CGRectGetMaxX(outerRect),
+                                CGRectGetMinY(outerRect),
+                                radius);
             
             CGPathAddArcToPoint(outerPathRef, NULL, CGRectGetMaxX(outerRect), CGRectGetMinY(outerRect), CGRectGetMaxX(outerRect), CGRectGetMaxY(outerRect), (arrowOffset >= 0) ? reducedOuterCornerRadius : outerCornerRadius);
             CGPathAddArcToPoint(outerPathRef, NULL, CGRectGetMaxX(outerRect), CGRectGetMaxY(outerRect), CGRectGetMinX(outerRect), CGRectGetMaxY(outerRect), outerCornerRadius);
@@ -1717,8 +1768,8 @@ static WYPopoverTheme *defaultTheme_ = nil;
     
     NSArray *keypaths = [theme observableKeypaths];
     for (NSString *keypath in keypaths) {
-		[theme addObserver:self forKeyPath:keypath options:NSKeyValueObservingOptionNew context:NULL];
-	}
+        [theme addObserver:self forKeyPath:keypath options:NSKeyValueObservingOptionNew context:NULL];
+    }
 }
 
 - (void)unregisterTheme
@@ -2206,7 +2257,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
         }
     }
     
-    viewController.view.clipsToBounds = YES;
+    viewController.view.clipsToBounds = NO;
     
     if (backgroundView.borderWidth == 0)
     {
@@ -2352,6 +2403,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
             containerFrame.origin.x -= offset;
         }
         
+        // JC: Move the arrow to the left.
         backgroundView.arrowOffset = -45;
         offset = backgroundView.frame.size.height / 2 + viewFrame.size.height / 2 - backgroundView.outerShadowInsets.top;
         
@@ -2526,6 +2578,9 @@ static WYPopoverTheme *defaultTheme_ = nil;
     containerFrame = backgroundView.frame;
     
     containerFrame.origin = WYPointRelativeToOrientation(containerOrigin, containerFrame.size, orientation);
+    
+    // JC: Makes the popover move up when in landscape mode.
+    containerFrame.origin.x += 10;
 
     if (aAnimated == YES) {
         backgroundView.frame = savedContainerFrame;
