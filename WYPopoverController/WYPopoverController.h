@@ -51,6 +51,7 @@ typedef NS_OPTIONS(NSUInteger, WYPopoverArrowDirection) {
 typedef NS_OPTIONS(NSUInteger, WYPopoverAnimationOptions) {
     WYPopoverAnimationOptionFade = 1UL << 0,            // default
     WYPopoverAnimationOptionScale = 1UL << 1,
+  WYPopoverAnimationOptionMoveDown = 1UL << 2,
     WYPopoverAnimationOptionFadeWithScale = WYPopoverAnimationOptionFade | WYPopoverAnimationOptionScale
 };
 
