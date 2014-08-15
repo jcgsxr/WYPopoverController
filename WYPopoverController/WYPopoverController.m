@@ -2069,7 +2069,11 @@ static WYPopoverTheme *defaultTheme_ = nil;
         
         if ((options & WYPopoverAnimationOptionMoveDown) == WYPopoverAnimationOptionMoveDown)
         {
-            beginFrame.origin.x += kDropDistance;
+            UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+            if (orientation == UIDeviceOrientationLandscapeLeft)
+                beginFrame.origin.x += kDropDistance;
+            else
+                beginFrame.origin.x -= kDropDistance;
             backgroundView.frame = beginFrame;
         }
         
@@ -2751,7 +2755,13 @@ static WYPopoverTheme *defaultTheme_ = nil;
                 if ((options & WYPopoverAnimationOptionMoveDown) == WYPopoverAnimationOptionMoveDown)
                 {
                     CGRect endFrame = backgroundView.frame;
-                    endFrame.origin.x += kDropDistance;
+                    
+                    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+                    if (orientation == UIDeviceOrientationLandscapeLeft)
+                        endFrame.origin.x += kDropDistance;
+                    else
+                        endFrame.origin.x -= kDropDistance;
+                    
                     backgroundView.frame = endFrame;
                 }
                 
